@@ -39,12 +39,12 @@
   - nginx_exists.status == "404"
 
 - name: copy nginx.conf
-  template: src=nginx.conf.j2 dest=/vagrant/nginx.conf force=yes mode=0644
+  template: src=nginx.conf.j2 dest=/vagrant/nginx2.conf force=yes mode=0644
 
 - name: start proxy container
   docker_container:
     name: gcr_proxy
-    image: "google_containers/nginx-slim:{{ gcr_proxy_nginx }}"
+    image: "gcr.io/google_containers/nginx-slim:{{ gcr_proxy_nginx }}"
     ports:
     - "80:80"
     state: started

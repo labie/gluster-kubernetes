@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-NODES = 3
+NODES = 2
 DISKS = 3
 CACHE = false
 LIBVIRT_DISK_CACHE = "default"
@@ -22,11 +22,11 @@ Vagrant.configure("2") do |config|
 
         master.vm.provider :virtualbox do |vb|
             vb.memory = 1024
-            vb.cpus = 2
+            vb.cpus = 1
         end
         master.vm.provider :libvirt do |lv|
             lv.memory = 1024
-            lv.cpus = 2
+            lv.cpus = 1
             lv.volume_cache = LIBVIRT_DISK_CACHE
         end
 
@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
                 "nodes" => (0..NODES-1).map {|j| "node#{j}"},
             }
             ansible.extra_vars = {
-                "vagrant_home"  => ENV['VAGRANT_HOME'] ? ENV['VAGRANT_HOME'] : "~/.vagrant.d",
+                "vagrant_home"  => ENV['0'] ? ENV['VAGRANT_HOME'] : "~/.vagrant.d",
                 "vagrant_cache" => ENV['VAGRANT_CACHE'] ? ENV['VAGRANT_CACHE'] : CACHE,
                 "vagrant_master"  => "192.168.10.90"
             }
@@ -68,14 +68,14 @@ Vagrant.configure("2") do |config|
                         vb.customize [ "createmedium", "--filename", "disk-#{i}-#{d}.vdi", "--size", 1024*1024 ]
                     end
                     vb.customize [ "storageattach", :id, "--storagectl", "VboxSata", "--port", 3+d, "--device", 0, "--type", "hdd", "--medium", "disk-#{i}-#{d}.vdi" ]
-                    vb.memory = 1024
-                    vb.cpus = 2
+                    vb.memory = 512
+                    vb.cpus = 1
                 end
                 node.vm.provider :libvirt do  |lv|
                     driverletters = ('b'..'z').to_a
                     lv.storage :file, :device => "vd#{driverletters[d]}", :path => "atomic-disk-#{i}-#{d}.disk", :size => '1024G'
-                    lv.memory = 1024
-                    lv.cpus =2
+                    lv.memory = 512
+                    lv.cpus =1
                     lv.volume_cache = LIBVIRT_DISK_CACHE
                 end
             end

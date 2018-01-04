@@ -1,0 +1,9 @@
+[master]
+master
+[nodes]
+node[0:2]
+
+[all:vars]
+vagrant_master=192.168.10.90
+vagrant_cache=false
+vagrant_home="~/.vagrant.d"
